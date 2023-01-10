@@ -15,3 +15,7 @@ interface INewRegisteredUser extends IRegisteredUser {
     newPassword: string;
     tycAccepted: 'true' | 'false';
 }
+
+interface ILoginUser extends Omit<IRegisteredUser, 'username'> {
+    rememberMe: boolean;
+}
