@@ -1,6 +1,7 @@
 import * as React from "react"
 import StyledInput from "../atom/styled-input"
 import LoginButton from "../atom/login-button"
+import { useAuthContext } from "../../context/auth-context"
 
 type LoginStructureProps = {
     setIsLogin: React.Dispatch<React.SetStateAction<boolean>>
@@ -8,6 +9,7 @@ type LoginStructureProps = {
 }
 
 export function LoginStructure({ setIsLogin }: LoginStructureProps) {
+    const { navigate, user, setUser } = useAuthContext();
     const [loginState, setLoginState] = React.useState<ILoginUser>({
         email: '',
         password: '',
@@ -31,13 +33,16 @@ export function LoginStructure({ setIsLogin }: LoginStructureProps) {
         event.preventDefault();
         const { email, password } = loginState;
         const encryptedPassword = btoa(password);
-        const user = getLocalStorageUser();
-        if (user) {
-            if (user.email === email && user.password === encryptedPassword) {
-                alert('Bienvenido');
+        const localUser = getLocalStorageUser();
+        if (localUser) {
+            if (localUser.email === email && localUser.password === encryptedPassword) {
+                setUser(localUser);
+                navigate('/home');
             } else {
                 alert('Usuario o contraseña incorrectos');
             }
+        } else {
+            alert('No estás registrado, por favor registrate :D');
         }
     }
 

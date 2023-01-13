@@ -1,29 +1,31 @@
 import * as React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 
 interface AuthContextType {
     user: IRegisteredUser|null
-    login: boolean
-    logout: boolean
+    navigate: ReturnType<typeof useNavigate>
+    logout: () => void
     setUser: React.Dispatch<React.SetStateAction<IRegisteredUser|null>>
-    setLogin: React.Dispatch<React.SetStateAction<boolean>>
-    setLogout: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const AuthContext = React.createContext({} as AuthContextType)
 
 export const AuthContextProvider: React.FC<React.PropsWithChildren<{}>> = (({ children }) => {
-    const [user, setUser] = React.useState<IRegisteredUser|null>(null)
-    const [logout, setLogout] = React.useState<boolean>(false)
-    const [login, setLogin] = React.useState<boolean>(false)
+    const [user, setUser] = useLocalStorage('user', null)
+    const navigate = useNavigate()
+
+    function logout() {
+        setUser(null)
+        navigate('/')
+    }
 
     const values = React.useMemo(() => ({
         user,
-        login,
+        navigate,
         logout,
         setUser,
-        setLogin,
-        setLogout
-    }), [user, login, logout])
+    }), [user])
 
     return (
         <AuthContext.Provider value={values}>
