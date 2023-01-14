@@ -11,6 +11,22 @@ type CharacterModalProps = {
     origin: string;
 }
 
+const StatusLight = ({status}: {status: string}) => {
+    if (status === 'Alive') {
+        return (
+            <div className='bg-green-400 w-4 h-4 rounded-full'></div>
+        )
+    } else if (status === 'Dead') {
+        return (
+            <div className='bg-red-400 w-4 h-4 rounded-full'></div>
+        )
+    } else {
+        return (
+            <div className='bg-yellow-400 w-4 h-4 rounded-full'></div>
+        )
+    }
+}
+
 
 export default function CharacterModal ({open, setOpen, characterImage, characterName, status, species, origin}: CharacterModalProps) {
     function closeModal() {
@@ -35,8 +51,11 @@ export default function CharacterModal ({open, setOpen, characterImage, characte
                 </div>
                 <ul className='text-center'>
                     <li><span className=' font-bold text-base'>{characterName}</span></li>
-                    <li><span className=' font-bold text-base'>{status}</span></li>
-                    <li><span className=' font-bold text-base'>{species}</span></li>
+                    <div className='w-full inline-flex justify-center items-center gap-2 '>
+                        <StatusLight status={status}/>
+                        {status}-{species}
+                    </div>
+                    <li>Origin:</li>
                     <li><span className=' font-bold text-base'>{origin}</span></li>  
                 </ul>
             </Modal>

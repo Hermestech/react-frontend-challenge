@@ -1,15 +1,25 @@
 import { useState } from "react";
 import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
+import useAuthContext from "../../context/auth-context";
+
+import DeleteModal from "./delete-modal";
 
 export default function NavBar() {
     const [navbar, setNavbar] = useState(false);
+    const { logout, navigate } = useAuthContext();
+    const [isOpen, setIsOpen] = useState(false);
+
+    function handleLogout() {
+        logout();
+        navigate("/login");
+    }
 
     return (
         <nav className="w-full md:flex md:flex-col md:justify-between bg-semi-dark-blue shadow">
             <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center">
                 <div>
                     <div className="flex items-center justify-between md:justify-center py-3">
-                        <article className="bg-blue-300 w-40 h-16 bg-cover bg-center rounded-md" style={{ backgroundImage:'url(/public/logo-rick.png)' }} />
+                        <article className="bg-blue-300 w-40 h-16 bg-cover bg-center rounded-md" style={{ backgroundImage:'url(/logo-rick.png)' }} />
                         <div className="md:hidden">
                             <button
                                 className="p-2 text-gray-700 rounded-md outline-none focus:border-gray-400 focus:border"
@@ -56,10 +66,16 @@ export default function NavBar() {
                     >
                         <ul className="flex flex-col items-center justify-center space-y-8 md:h-48 md:flex md:items-start md:pl-12">
                             <li className="text-gray-600 hover:text-blue-600">
-                                <a href="#">HOME</a>
+                                <a 
+                                    onClick={() => {
+                                        navigate("/login");
+                                    }}
+                                >LOGOUT</a>
                             </li>
                             <li className="text-gray-600 hover:text-blue-600">
-                                <a href="#">EXPLORE</a>
+                                <a
+                                    onClick={() => {setIsOpen(true)}}
+                                >DELETE ACCOUNT</a>
                             </li>
                             <li className="text-gray-600 hover:text-blue-600">
                                 <a href="#">BLOG</a>
@@ -68,6 +84,7 @@ export default function NavBar() {
                                 <a href="#">CONTACT</a>
                             </li>
                         </ul>
+                        <DeleteModal isOpen={isOpen} setIsOpen={setIsOpen} delete={handleLogout}/>
                     </div>
                 </div>
             </div>

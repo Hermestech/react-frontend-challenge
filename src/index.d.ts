@@ -4,6 +4,7 @@ interface IInput {
     value: string;
     name: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    width?: string;
 }
 
 interface IRegisteredUser {
@@ -18,4 +19,15 @@ interface INewRegisteredUser extends IRegisteredUser {
 
 interface ILoginUser extends Omit<IRegisteredUser, 'username'> {
     rememberMe: boolean;
+}
+
+interface ICharacter {
+    id: string;
+    image: string;
+    name: string;
+    status: string;
+    species: string;
+    origin: {
+        name: string;
+    };
 }
