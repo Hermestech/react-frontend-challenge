@@ -8,7 +8,6 @@ type ProtectedRouteProps = {
 
 export const ProtectedRoute: React.FC<React.PropsWithChildren<ProtectedRouteProps>> = ({ children }) => {
     const { user} = useAuthContext()
-    console.log(user)
     if (!user) {
         return <Navigate to="/login" />
     }
