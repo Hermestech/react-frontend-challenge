@@ -2,14 +2,15 @@ import * as React from "react"
 import StyledInput from "../atom/styled-input"
 import LoginButton from "../atom/login-button"
 import useAuthContext from "../../context/auth-context"
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 type RegisterStructureProps = {
     setIsLogin: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export function RegisterStructure({ setIsLogin }: RegisterStructureProps) {
-const { setUser } = useAuthContext()
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+const { setUser, navigate } = useAuthContext()
+const passwordRegex = /^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$/;
 const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const [formState, setFormState] = React.useState<INewRegisteredUser>({
   email: '',
@@ -20,6 +21,7 @@ const [formState, setFormState] = React.useState<INewRegisteredUser>({
 const [validPassword, setValidPassword] = React.useState<boolean>(false);
 const [matchPassword, setMatchPassword] = React.useState<boolean>(false);
 const [validEmail, setValidEmail] = React.useState<boolean>(false);
+const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
 function emailMatchWithRegex(email: string): boolean {
   return emailRegex.test(email);
@@ -55,6 +57,10 @@ const saveRegisteredUserLocalStorage = (user: IRegisteredUser): void => {
   localStorage.setItem('user', JSON.stringify(user));
 }
 
+const handleShowPassword = (): void => {
+  setShowPassword(!showPassword);
+}
+
 const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const { email, password } = formState;
@@ -65,13 +71,16 @@ const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     }
     setUser(newUser);
     saveRegisteredUserLocalStorage(newUser);
+    setTimeout(() => {
+    navigate('/');
+    }, 2500);
 }
 
 return(
     <>
     <div className="mx-auto max-w-md">
       <div className="flex w-full justify-center">
-        <img src="" className="h-6" alt="Tailwind Play" />
+        <img src="/logo-rick.png" className="h-12 w-24" alt="Tailwind Play" />
       </div>
       <div className="divide-y divide-gray-300/50">
         <div className="space-y-6 py-8 text-center text-base leading-7 text-gray-600">
@@ -95,16 +104,31 @@ return(
                 </p>
               )
             }
+            <div className="flex ">
             <StyledInput 
               placeholder="Contraseña"
-              inputType="password" 
+              inputType={showPassword ? "text" : "password"}
               value={formState.password}
               onChange={e => {
                 handleChange(e);
                 setValidPassword(isValidPassword(e.target.value) );
               }}
               name="password"
+              width="medium"
             />
+            <div className="flex flex-col items-center justify-center">
+              <button
+                onClick={handleShowPassword}
+                className="rounded-md h-12 p-2"
+                type="button"
+              >
+                {
+                  showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />
+                }
+              </button>
+            </div>
+            </div>
+
             {
               !validPassword && formState.password.length >0 &&  (
                 <p className="text-red-500 text-xs">
@@ -112,16 +136,31 @@ return(
                 </p>
               )
             }
+            <div className="flex">
             <StyledInput 
              placeholder="Confirmar contraseña"
-             inputType="password" 
+             inputType={showPassword ? "text" : "password"} 
              value={formState.newPassword}
              onChange={ e => {
                 handleChange(e);
                 setMatchPassword(newPasswordMatchWithPassword(formState.password, e.target.value));
              }}
              name="newPassword"
+              width="medium"
              />
+            <div className="flex flex-col items-center justify-center">
+              <button
+                onClick={handleShowPassword}
+                className="rounded-md h-12 p-2"
+                type="button"
+              >
+                {
+                  showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />
+                }
+              </button>
+            </div>
+            </div>
+
              {
               !matchPassword && formState.newPassword.length >0 &&  (
                 <p className="text-red-500 text-xs">

@@ -5,7 +5,14 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "semi-dark-blue": "#161D2F",
+        "dark-blue": "#10141E",
+        "greyish-blue": "#5A698F",
+        "own-red": "#FC4747",
+      },
+    },
   },
   plugins: [],
 }
